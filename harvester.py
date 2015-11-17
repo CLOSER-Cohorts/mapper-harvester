@@ -36,21 +36,12 @@ class MapperHarvester(object):
 
             if self.config.dv_file_out:
                 self.download(i, self.config.dv_file_name, self.config.dv_file_out)
-                # self.fetch(i['id'], self.config.dv_file_name)
-                # print'{dv:10s}'.format(dv=('[x]' if len(self.buf) > 0 else '[ ]')),
-                # self.write(i['prefix'], self.config.dv_file_out)
 
             if self.config.tq_file_out:
-                self.download(i, self.config.question_topics_file_name, self.config.tq_file_out)
-                # self.fetch(i['id'], self.config.question_topics_file_name)
-                # print'{tq:10s}'.format(tq=('[x]' if len(self.buf) > 0 else '[ ]')),
-                #self.write(i['prefix'], self.config.tq_file_out)
+                self.download(i, self.config.question_topics_file_name, self.config.tq_file_out, 1)
 
             if self.config.tv_file_out:
-                self.download(i, self.config.variable_topics_file_name, self.config.tv_file_out)
-                # self.fetch(i['id'], self.config.variable_topics_file_name)
-                # print'{tv:10s}'.format(tv=('[x]' if len(self.buf) > 0 else '[ ]')),
-                #self.write(i['prefix'], self.config.tv_file_out)
+                self.download(i, self.config.variable_topics_file_name, self.config.tv_file_out, 1)
 
             self.clear_buf()
 
@@ -60,14 +51,14 @@ class MapperHarvester(object):
 
             counter += 1
 
-    def download(self, instrument, file_name, file_out):
+    def download(self, instrument, file_name, file_out, column=0):
         try:
             self.fetch(instrument['id'], file_name)
             zeros = 0
             lines = 0
             for line in self.buf.splitlines():
                 lines += 1
-                if line.split("\t")[0] == "0":
+                if line.split("\t")[column] == "0":
                     zeros += 1
             print'{result:10s}'.format(
                 result=("{0:.0f}".format((1 - (zeros / lines)) * 100 if len(self.buf) > 0 else 0.0) + "%")),
