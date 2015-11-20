@@ -65,6 +65,7 @@ class MapperHarvester(object):
             self.write(instrument['prefix'], file_out)
         except urllib2.URLError:
             print'{result:10s}'.format(result='X'),
+	sys.stdout.flush()
 
     def fetch(self, iid, file_name):
         if file_name[:1] != '/':
